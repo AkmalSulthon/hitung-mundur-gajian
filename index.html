@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8fa" />
+    <title>Hitung Mundur Gajian</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="countdown-panel" aria-labelledby="page-title">
+        <h1 id="page-title">Hitung Mundur Gajian</h1>
+
+        <div class="countdown" aria-live="polite">
+          <div id="days-remaining" class="days-remaining">H-0</div>
+          <div id="time-remaining" class="time-remaining" aria-label="Sisa waktu">00:00:00:00</div>
+        </div>
+
+        <p id="target-date" class="target-date">Gajian · 10 September 2026</p>
+
+        <button id="settings-button" class="settings-button" type="button">
+          Pengaturan
+        </button>
+      </section>
+    </main>
+
+    <dialog id="settings-dialog" class="settings-dialog" aria-labelledby="settings-title">
+      <form id="settings-form">
+        <div class="dialog-header">
+          <h2 id="settings-title">Pengaturan</h2>
+          <button id="close-dialog-button" class="icon-button" type="button" aria-label="Tutup pengaturan">×</button>
+        </div>
+
+        <label class="field-label" for="payday-select">Tanggal gajian</label>
+        <select id="payday-select" name="payday" required></select>
+
+        <div class="dialog-actions">
+          <button id="cancel-button" class="button button-secondary" type="button">Batal</button>
+          <button class="button button-primary" type="submit">Simpan</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>
