@@ -1,27 +1,37 @@
 (function () {
-  'use strict';
+  "use strict";
 
-  const STORAGE_KEY = 'paydayDate';
+  const STORAGE_KEY = "paydayDate";
   const DEFAULT_PAYDAY = 10;
   const MONTH_NAMES = [
-    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
   ];
 
-  const daysRemainingElement = document.getElementById('days-remaining');
-  const timeRemainingElement = document.getElementById('time-remaining');
-  const targetDateElement = document.getElementById('target-date');
-  const settingsButton = document.getElementById('settings-button');
-  const dialog = document.getElementById('settings-dialog');
-  const form = document.getElementById('settings-form');
-  const select = document.getElementById('payday-select');
-  const cancelButton = document.getElementById('cancel-button');
-  const closeDialogButton = document.getElementById('close-dialog-button');
+  const daysRemainingElement = document.getElementById("days-remaining");
+  const timeRemainingElement = document.getElementById("time-remaining");
+  const targetDateElement = document.getElementById("target-date");
+  const settingsButton = document.getElementById("settings-button");
+  const dialog = document.getElementById("settings-dialog");
+  const form = document.getElementById("settings-form");
+  const select = document.getElementById("payday-select");
+  const cancelButton = document.getElementById("cancel-button");
+  const closeDialogButton = document.getElementById("close-dialog-button");
 
   let paydayDate = readPaydayDate();
 
   for (let day = 1; day <= 31; day += 1) {
-    const option = document.createElement('option');
+    const option = document.createElement("option");
     option.value = String(day);
     option.textContent = String(day);
     select.appendChild(option);
@@ -36,7 +46,9 @@
     }
 
     const value = Number(storedValue);
-    return Number.isInteger(value) && value >= 1 && value <= 31 ? value : DEFAULT_PAYDAY;
+    return Number.isInteger(value) && value >= 1 && value <= 31
+      ? value
+      : DEFAULT_PAYDAY;
   }
 
   function daysInMonth(year, monthIndex) {
@@ -49,38 +61,48 @@
     let day = Math.min(preferredDay, daysInMonth(year, month));
     let target = new Date(year, month, day, 0, 0, 0, 0);
 
-    const isToday = target.getFullYear() === now.getFullYear()
-      && target.getMonth() === now.getMonth()
-      && target.getDate() === now.getDate();
+    const isToday =
+      target.getFullYear() === now.getFullYear() &&
+      target.getMonth() === now.getMonth() &&
+      target.getDate() === now.getDate();
 
     if (isToday || target > now) {
       return { target, isToday };
     }
 
     month += 1;
-    if (month > 11) { month = 0; year += 1; }
+    if (month > 11) {
+      month = 0;
+      year += 1;
+    }
     day = Math.min(preferredDay, daysInMonth(year, month));
     target = new Date(year, month, day, 0, 0, 0, 0);
     return { target, isToday: false };
   }
 
   function calendarDayDifference(from, to) {
-    const fromUtc = Date.UTC(from.getFullYear(), from.getMonth(), from.getDate());
+    const fromUtc = Date.UTC(
+      from.getFullYear(),
+      from.getMonth(),
+      from.getDate(),
+    );
     const toUtc = Date.UTC(to.getFullYear(), to.getMonth(), to.getDate());
     return Math.max(0, Math.round((toUtc - fromUtc) / 86400000));
   }
 
-  function pad(value) { return String(value).padStart(2, '0'); }
+  function pad(value) {
+    return String(value).padStart(2, "0");
+  }
 
   function render() {
     const now = new Date();
     const paydayStatus = getPaydayStatus(now, paydayDate);
     const target = paydayStatus.target;
-    daysRemainingElement.classList.toggle('is-today', paydayStatus.isToday);
+    daysRemainingElement.classList.toggle("is-today", paydayStatus.isToday);
     if (paydayStatus.isToday) {
-      daysRemainingElement.textContent = 'Hari Ini Gajian!';
-      timeRemainingElement.textContent = '00:00:00:00';
-      timeRemainingElement.setAttribute('aria-label', 'Hari ini gajian');
+      daysRemainingElement.textContent = "Hari Ini Gajian!";
+      timeRemainingElement.textContent = "00:00:00:00";
+      timeRemainingElement.setAttribute("aria-label", "Hari ini gajian");
       targetDateElement.textContent = `Gajian · ${target.getDate()} ${MONTH_NAMES[target.getMonth()]} ${target.getFullYear()}`;
       return;
     }
@@ -95,7 +117,10 @@
 
     daysRemainingElement.textContent = `H-${calendarDays}`;
     timeRemainingElement.textContent = `${pad(days)}:${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-    timeRemainingElement.setAttribute('aria-label', `${days} hari, ${hours} jam, ${minutes} menit, ${seconds} detik`);
+    timeRemainingElement.setAttribute(
+      "aria-label",
+      `${days} hari, ${hours} jam, ${minutes} menit, ${seconds} detik`,
+    );
     targetDateElement.textContent = `Gajian · ${target.getDate()} ${MONTH_NAMES[target.getMonth()]} ${target.getFullYear()}`;
   }
 
@@ -109,13 +134,14 @@
     dialog.close();
   }
 
-  settingsButton.addEventListener('click', openSettings);
-  cancelButton.addEventListener('click', closeSettings);
-  closeDialogButton.addEventListener('click', closeSettings);
-  form.addEventListener('submit', function (event) {
+  settingsButton.addEventListener("click", openSettings);
+  cancelButton.addEventListener("click", closeSettings);
+  closeDialogButton.addEventListener("click", closeSettings);
+  form.addEventListener("submit", function (event) {
     event.preventDefault();
     const selectedDay = Number.parseInt(select.value, 10);
-    if (!Number.isInteger(selectedDay) || selectedDay < 1 || selectedDay > 31) return;
+    if (!Number.isInteger(selectedDay) || selectedDay < 1 || selectedDay > 31)
+      return;
     paydayDate = selectedDay;
     try {
       localStorage.setItem(STORAGE_KEY, String(paydayDate));
@@ -125,7 +151,7 @@
     closeSettings();
     render();
   });
-  dialog.addEventListener('click', function (event) {
+  dialog.addEventListener("click", function (event) {
     if (event.target === dialog) closeSettings();
   });
 
